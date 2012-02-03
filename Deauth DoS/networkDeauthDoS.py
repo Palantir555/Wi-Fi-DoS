@@ -13,7 +13,7 @@ victims = []
 
 #Wellcome Message
 print
-print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"WELLCOME TO THE WI-FI DEAUTHENTICATION SCRIPT"
+print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"WELCOME TO THE WI-FI DEAUTHENTICATION SCRIPT"
 print chr(27)+"[0m"
 victimsCont = 0
 
