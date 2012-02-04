@@ -11,7 +11,7 @@ network = '00:00:00:00:00:00'
 victims = []
 
 
-#Wellcome Message
+#Welcome Message
 print
 print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"WELCOME TO THE WI-FI DEAUTHENTICATION SCRIPT"
 print chr(27)+"[0m"
