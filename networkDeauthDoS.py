@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print "[+] Target Network:\n\t- {0}".format(network)
 
     if len(victims) == 0:
-        deauth_all_clients() #Will only return if there's an error
+        deauth_all_clients(network) #Will only return if there's an error
         sys.exit(1)
 
     print "[+] Target Clients:"
