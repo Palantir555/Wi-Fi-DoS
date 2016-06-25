@@ -29,7 +29,7 @@ def deauth_client(net, cli):
     command = "aireplay-ng -a {0} -c {1} -0 3 {2}".format(net, cli, interface)
     subprocess.call([command], shell=True)
 
-if __init__ is '__main__':
+if __name__ == '__main__':
     #Init Message
     print "[+] Target Network:\n\t- {0}".format(network)
 
